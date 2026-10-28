@@ -23,6 +23,8 @@ services:
     deploy:
       labels:
         - traefik.enable=true
+        - traefik.http.routers.rundeck.rule=Host(`rundeck.tekhnoa.com`)
+        - traefik.http.routers.rundeck.entrypoints=websecure
         - traefik.http.services.rundeck.loadbalancer.server.port=4440
       replicas: 1
       placement:
