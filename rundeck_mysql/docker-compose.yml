@@ -3,6 +3,17 @@ version: "3.8"
 services:
   rundeck:
     image: rundeck/rundeck:6.3.0-20261022
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        echo '==== Waiting for MySQL on mysql:3306 ===='
+        until (echo > /dev/tcp/mysql/3306) 2>/dev/null; do
+          echo 'MySQL not ready yet, retrying in 3 seconds...'
+          sleep 3
+        done
+        echo '==== MySQL is UP, starting Rundeck ===='
+        exec /tini -- docker-lib/entry.sh
     environment:
       RUNDECK_DATABASE_DRIVER: org.mariadb.jdbc.Driver
       RUNDECK_DATABASE_USERNAME: rundeck
