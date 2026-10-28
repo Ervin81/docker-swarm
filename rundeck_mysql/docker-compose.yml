@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   rundeck:
-    image: dhi.io/rundeck:6-alpine
+    image: rundeck/rundeck:6.3.0-20261022
     environment:
       RUNDECK_DATABASE_DRIVER: org.mariadb.jdbc.Driver
       RUNDECK_DATABASE_USERNAME: rundeck
