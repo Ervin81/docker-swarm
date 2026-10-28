@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  rundeck:
+    image: rundeck/rundeck:${RUNDECK_VERSION}
+    environment:
+      RUNDECK_DATABASE_DRIVER: org.mariadb.jdbc.Driver
+      RUNDECK_DATABASE_USERNAME: rundeck
+      RUNDECK_DATABASE_PASSWORD: ${DB_PASSWORD}
+      RUNDECK_DATABASE_URL: jdbc:mysql://mysql:3306/rundeck?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&permitMysqlScheme=true
+      RUNDECK_GRAILS_URL: ${RUNDECK_URL}
+      RUNDECK_SERVER_FORWARDED: "true"
+    volumes:
+      - /mnt/srv-dsw-nfs-c01/rundeck/data:/home/rundeck/server/data
+    ports:
+      - target: 4440
+        published: 4440
+        protocol: tcp
+        mode: ingress
+    networks:
+      - rundeck
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.platform.arch == x86_64
+      restart_policy:
+        condition: on-failure
+        delay: 15s
+
+  mysql:
+    image: mysql:8.4
+    command: --mysql-native-password=ON
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: rundeck
+      MYSQL_USER: rundeck
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /mnt/srv-dsw-nfs-c01/rundeck/mysql:/var/lib/mysql
+    networks:
+      - rundeck
+    deploy:
+      replicas: 1
+      update_config:
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+
+networks:
+  rundeck:
+    driver: overlay
