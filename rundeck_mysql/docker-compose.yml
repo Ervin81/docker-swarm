@@ -36,6 +36,7 @@ services:
 
   mysql:
     image: mysql:8.4
+    user: "1000:1000"
     command: --mysql-native-password=ON
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
