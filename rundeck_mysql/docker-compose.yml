@@ -19,7 +19,11 @@ services:
         mode: ingress
     networks:
       - rundeck
+      - traefik-public
     deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.rundeck.loadbalancer.server.port=4440
       replicas: 1
       placement:
         constraints:
@@ -51,3 +55,5 @@ services:
 networks:
   rundeck:
     driver: overlay
+  traefik-public:
+    external: true
