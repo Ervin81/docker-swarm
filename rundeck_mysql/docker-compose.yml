@@ -11,7 +11,7 @@ services:
       RUNDECK_GRAILS_URL: ${RUNDECK_URL}
       RUNDECK_SERVER_FORWARDED: "true"
     volumes:
-      - /mnt/srv-dsw-nfs-c01/rundeck/data:/home/rundeck/server/data
+      - /mnt/srv-dsw-nfs-c01/volumes/rundeck/data:/home/rundeck/server/data
     ports:
       - target: 4440
         published: 4440
@@ -37,7 +37,7 @@ services:
       MYSQL_USER: rundeck
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - /mnt/srv-dsw-nfs-c01/rundeck/mysql:/var/lib/mysql
+      - /mnt/srv-dsw-nfs-c01/volumes/rundeck/data:/home/rundeck/server/data
     networks:
       - rundeck
     deploy:
